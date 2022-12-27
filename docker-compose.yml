@@ -1,9 +1,23 @@
-version: "3"
+version: '3.9'
 services:
   app:
-    build: .
+    restart: on-failure
+    build: ./web
+    depends_on:
+      - mysql
     ports:
-      - 3000:3000
+      - '81:5000'
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: "peoples"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "root"
+  nginx:
+    build: ./nginx
+    ports:
+    - '80:80'
+    depends_on:
+    - app
   mysql:
     image: mysql
     container_name: mysql
